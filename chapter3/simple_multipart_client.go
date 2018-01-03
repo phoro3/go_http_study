@@ -6,6 +6,7 @@ import (
 	"log"
 	"mime/multipart"
 	"net/http"
+	"net/textproto"
 	"os"
 )
 
@@ -14,7 +15,10 @@ func main() {
 	writer := multipart.NewWriter(&buffer)
 	writer.WriteField("name", "Michael Jackson")
 
-	fileWriter, err := writer.CreateFormFile("source", "simple_multipart_client.go")
+	part := make(textproto.MIMEHeader)
+	part.Set("Content-Type", "image/jpeg")
+	part.Set("Content-Desposition", `form-data; name="thumbnail"; filename="simple_multipart_client.go"`)
+	fileWriter, err := writer.CreatePart(part)
 	if err != nil {
 		panic(err)
 	}
