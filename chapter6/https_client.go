@@ -17,10 +17,17 @@ func main() {
 	}
 	certPool := x509.NewCertPool()
 	certPool.AppendCertsFromPEM(cert)
-	tlsConfig := &tls.Config{
-		RootCAs: certPool,
+
+	client_cert, err := tls.LoadX509KeyPair("client.crt", "client.key")
+	if err != nil {
+		panic(err)
 	}
-	tlsConfig.BuildNameToCertificate()
+
+	tlsConfig := &tls.Config{
+		RootCAs:      certPool,
+		Certificates: []tls.Certificate{client_cert},
+	}
+	//tlsConfig.BuildNameToCertificate()
 
 	//Make Client
 	client := &http.Client{
